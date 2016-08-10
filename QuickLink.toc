@@ -1,0 +1,17 @@
+﻿## Interface: 70000
+## Title: QuickLink
+## Notes: Adds Quicklinks for Armory and other WoW related sites to player popups and LFG and Friendlist
+## Author: gentoomaniac
+## Version: 7.0.3-1.0.0
+## SavedVariables: QuickLinkPages
+
+libs\LibRealmInfo\LibRealmInfo.lua
+
+embeds.xml
+localization.lua
+QuickLinkFrame.xml
+QuickLinkOptionsFrame.xml
+
+Modules\bnet.lua
+Modules\lfg.lua
+Modules\unitpopup.lua

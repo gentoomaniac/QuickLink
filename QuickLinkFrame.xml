@@ -1,0 +1,66 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+    <Script file="core.lua" />
+    <Frame name="QuickLinkFrame" parent="UIParent" toplevel="true" enableMouse="true" hidden="true">
+        <Size>
+            <AbsDimension x="600" y="138" />
+        </Size>
+        <Anchors>
+            <Anchor point="CENTER">
+                <Offset x="0" y="126" />
+            </Anchor>
+        </Anchors>
+        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+            <BackgroundInsets>
+                <AbsInset left="11" right="12" top="12" bottom="11" />
+            </BackgroundInsets>
+            <TileSize>
+                <AbsValue val="32" />
+            </TileSize>
+            <EdgeSize>
+                <AbsValue val="32" />
+            </EdgeSize>
+        </Backdrop>
+        <Frames>
+            <EditBox name="linkEditBox" inherits="InputBoxTemplate">
+                <Size>
+                    <AbsDimension x="550" y="32" />
+                </Size>
+                <Anchors>
+                    <Anchor point="CENTER">
+                        <Offset x="0" y="0" />
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnEscapePressed>okButton1_OnClick();</OnEscapePressed>
+                </Scripts>
+            </EditBox>
+            <Button name="okButton1" inherits="UIPanelButtonTemplate" text="OK">
+                <Size>
+                    <AbsDimension x="75" y="23" />
+                </Size>
+                <Anchors>
+                    <Anchor point="BOTTOM">
+                        <Offset x="0" y="20" />
+                    </Anchor>
+                </Anchors>
+                <Scripts>
+                    <OnClick>okButton1_OnClick();</OnClick>
+                </Scripts>
+            </Button>
+        </Frames>
+        <Layers>
+            <Layer level="OVERLAY">
+                <FontString name="headlineString" inherits="GameFontNormal" text="placeholder">
+                    <Size>
+                        <AbsDimension x="300" y="20" />
+                    </Size>
+                    <Anchors>
+                        <Anchor point="CENTER">
+                            <Offset x="0" y="40" />
+                        </Anchor>
+                    </Anchors>
+                </FontString>
+            </Layer>
+        </Layers>
+    </Frame>
+</Ui>
