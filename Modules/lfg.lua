@@ -13,13 +13,15 @@ function getLFGQuickLinkMenu(resultID)
         menuList = {},
     }
 	for i=1,#QuickLinkPages do
-		table.insert(entry.menuList, {
-			text = QuickLinkPages[i].name,
-			func = function(_, name) QuickLink:ShowUrlFrame(QuickLinkPages[i].name, QuickLinkPages[i].url, name); end,
-			notCheckable = true,
-			arg1 = nil,
-			disabled = nil,
-		});
+        if QuickLinkPages[i].enabled then
+            table.insert(entry.menuList, {
+                text = QuickLinkPages[i].name,
+                func = function(_, name) QuickLink:ShowUrlFrame(QuickLinkPages[i].name, QuickLinkPages[i].url, name); end,
+                notCheckable = true,
+                arg1 = nil,
+                disabled = nil,
+            });
+        end
 	end
 	
 	return entry;

@@ -1,6 +1,10 @@
 QuickLink = LibStub("AceAddon-3.0"):NewAddon("QuickLink", "AceConsole-3.0", "AceHook-3.0")
 
 local L = LibStub("AceLocale-3.0"):GetLocale("QuickLink", true)
+local AceConfig = LibStub("AceConfig-3.0")
+local AceConfigDialog = LibStub("AceConfigDialog-3.0")
+local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
+
 local LRI = LibStub:GetLibrary("LibRealmInfo");
 
 -- Globals
@@ -14,10 +18,10 @@ QuickLink_details = {
 };
 -- default config settings
 local QuickLink_defaultPages = {
-    { name = "Armory", url = "http://{REGION}.battle.net/wow/{LANGUAGE}/character/{REALM}/{NAME}/advanced" },
-    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/player/{REGION}/{REALM}/{NAME}" },
-    { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}" },
-    { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}" },
+    { name = "Armory", url = "http://{REGION}.battle.net/wow/{LANGUAGE}/character/{REALM}/{NAME}/advanced", enabled = true },
+    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/player/{REGION}/{REALM}/{NAME}", enabled = true },
+    { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}", enabled = true },
+    { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}", enabled = true },
 }
 
 local function urlEscape(url)
@@ -76,6 +80,91 @@ function QuickLink:ShowUrlFrame(pagename, pagetemplate, name, server)
     end
 end
 
+local function QuickLink_GenConfig()
+    local options = {
+        name = "QuickLink", handler = QuickLink, type = "group",
+        args = {}
+    }
+
+    for i, page in pairs(QuickLinkPages) do
+        local page_options = {
+            type = "group",
+            name = page.name,
+            order = i,
+            args = {
+                page_name = {
+                    order = 1,
+                    type = "input",
+                    name = "Name",
+                    desc = "Name of the page",
+                    set = function(info, val)
+                        QuickLinkPages[i].name = val
+                        QuickLink_ConfigChange()
+                        LibStub("AceConfigRegistry-3.0"):NotifyChange("QuickLink")
+                    end,
+                    get = function() return QuickLinkPages[i].name end,
+                },
+                page_url = {
+                    order = 2,
+                    type = "input",
+                    name = "URL",
+                    desc = "URL pattern for the page entry",
+                    set = function(info, val)
+                        QuickLinkPages[i].url = val
+                        QuickLink_ConfigChange()
+                    end,
+                    get = function() return QuickLinkPages[i].url end,
+                    width = "full",
+                    multiline = 2
+                },
+                isEnabled = {
+                    order = 10,
+                    type = "toggle",
+                    name = "enabled",
+                    desc = "Enables the given link",
+                    set = function(info, val)
+                        QuickLinkPages[i].enabled = val
+                        QuickLink_ConfigChange()
+                    end,
+                    get = function() return QuickLinkPages[i].enabled end
+                }
+            }
+        }
+        options.args["page_"..i] = page_options
+    end
+    
+    -- add entry for a new site
+    options.args["page_"..#options.args] = {
+            type = "group",
+            name = "+++ new link",
+            order = i,
+            args = {
+                page_name = {
+                    order = 1,
+                    type = "input",
+                    name = "Name",
+                    desc = "Name of the page",
+                    set = function(info, val)
+                        table.insert(QuickLinkPages, {})
+                        QuickLinkPages[#QuickLinkPages].name = val
+                        QuickLinkPages[#QuickLinkPages].url = "change me"
+                        QuickLinkPages[#QuickLinkPages].enabled = false
+                        LibStub("AceConfigRegistry-3.0"):NotifyChange("QuickLink")
+                    end,
+                    get = function()
+                        if QuickLinkPages[i] then
+                            return QuickLinkPages[i].name
+                        else
+                            return "Page Name"
+                        end
+                    end,
+                }
+            }
+        }
+    
+    
+    return options
+end
 ------------------------------------------------------------------------
 
 function QuickLink:OnInitialize()
@@ -83,7 +172,9 @@ function QuickLink:OnInitialize()
         QuickLinkPages = QuickLink_defaultPages
         QuickLink:Print("Loaded default pages")
     end
-    QuickLink:Print("Loaded pages")
+    AceConfig:RegisterOptionsTable("QuickLink", QuickLink_GenConfig())
+    QuickLink.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("QuickLink", "QuickLink")
+    
     QuickLink_variablesLoaded = true;
     QuickLink:EnableModule("QuickLink_UNIT_POPUP")
     QuickLink:EnableModule("QuickLink_LFG")

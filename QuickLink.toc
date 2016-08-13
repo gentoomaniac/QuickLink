@@ -10,7 +10,6 @@ libs\LibRealmInfo\LibRealmInfo.lua
 embeds.xml
 localization.lua
 QuickLinkFrame.xml
-QuickLinkOptionsFrame.xml
 
 Modules\bnet.lua
 Modules\lfg.lua
