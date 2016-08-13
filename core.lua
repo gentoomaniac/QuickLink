@@ -24,6 +24,17 @@ local QuickLink_defaultPages = {
     { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}", enabled = true },
 }
 
+StaticPopupDialogs["QUICKLINK_DELETE"] = {
+    text = "delete?" ,
+    button1 = "Yes",
+    button2 = "No",
+    OnAccept = function() end,
+    timeout = 0,
+    whileDead = true,
+    hideOnEscape = true,
+    preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
+}
+
 local function urlEscape(url)
     return string.gsub(url, "([^A-Za-z0-9_:/?&=.-])",
         function(ch)
@@ -80,17 +91,23 @@ function QuickLink:ShowUrlFrame(pagename, pagetemplate, name, server)
     end
 end
 
-local function QuickLink_GenConfig()
+local function GenConfig()
     local options = {
         name = "QuickLink", handler = QuickLink, type = "group",
-        args = {}
+        args = {
+        	desc = {
+				order = 1,
+				type = "description",
+				name = "Some description here!",
+			},
+        }
     }
 
     for i, page in pairs(QuickLinkPages) do
         local page_options = {
             type = "group",
             name = page.name,
-            order = i,
+            order = 10+i,
             args = {
                 page_name = {
                     order = 1,
@@ -99,8 +116,7 @@ local function QuickLink_GenConfig()
                     desc = "Name of the page",
                     set = function(info, val)
                         QuickLinkPages[i].name = val
-                        QuickLink_ConfigChange()
-                        LibStub("AceConfigRegistry-3.0"):NotifyChange("QuickLink")
+                        ConfigChange()
                     end,
                     get = function() return QuickLinkPages[i].name end,
                 },
@@ -111,7 +127,7 @@ local function QuickLink_GenConfig()
                     desc = "URL pattern for the page entry",
                     set = function(info, val)
                         QuickLinkPages[i].url = val
-                        QuickLink_ConfigChange()
+                        ConfigChange()
                     end,
                     get = function() return QuickLinkPages[i].url end,
                     width = "full",
@@ -124,20 +140,34 @@ local function QuickLink_GenConfig()
                     desc = "Enables the given link",
                     set = function(info, val)
                         QuickLinkPages[i].enabled = val
-                        QuickLink_ConfigChange()
+                        ConfigChange()
                     end,
                     get = function() return QuickLinkPages[i].enabled end
-                }
+                },
+                delete = {
+                    type = "execute",
+                    name = "delete",
+                    desc = "delete the link entirely",
+                    func = function()
+                        StaticPopupDialogs["QUICKLINK_DELETE"].text = "Do you really want to delete the link to " .. QuickLinkPages[i].name .. "?"
+                        StaticPopupDialogs["QUICKLINK_DELETE"].OnAccept = function()
+                            QuickLinkPages[i] = nil
+                            ConfigChange()
+                        end
+                        StaticPopup_Show ("QUICKLINK_DELETE")
+                    end,
+                    order = 20,
+                },
             }
         }
         options.args["page_"..i] = page_options
     end
     
     -- add entry for a new site
-    options.args["page_"..#options.args] = {
+    local new_entry = {name = "New Page", url = "", enabled = false}
+    options.args["page_new"] = {
             type = "group",
             name = "+++ new link",
-            order = i,
             args = {
                 page_name = {
                     order = 1,
@@ -145,19 +175,38 @@ local function QuickLink_GenConfig()
                     name = "Name",
                     desc = "Name of the page",
                     set = function(info, val)
-                        table.insert(QuickLinkPages, {})
-                        QuickLinkPages[#QuickLinkPages].name = val
-                        QuickLinkPages[#QuickLinkPages].url = "change me"
-                        QuickLinkPages[#QuickLinkPages].enabled = false
-                        LibStub("AceConfigRegistry-3.0"):NotifyChange("QuickLink")
+                        new_entry.name = val
                     end,
-                    get = function()
-                        if QuickLinkPages[i] then
-                            return QuickLinkPages[i].name
-                        else
-                            return "Page Name"
-                        end
+                    get = function() return new_entry.name end,
+                },
+                page_url = {
+                    order = 2,
+                    type = "input",
+                    name = "URL",
+                    desc = "URL pattern for the page entry",
+                    set = function(info, val)
+                        new_entry.url = val
                     end,
+                    get = function() return new_entry.url end,
+                    width = "full",
+                    multiline = 2
+                },
+                isEnabled = {
+                    order = 10,
+                    type = "toggle",
+                    name = "enabled",
+                    desc = "Enables the given link",
+                    set = function(info, val)
+                        new_entry.enabled = val
+                    end,
+                    get = function() return new_entry.enabled end
+                },
+                add = {
+                    type = "execute",
+                    name = "add link",
+                    desc = "Add the link to QuickLink",
+                    func = function() table.insert(QuickLinkPages, new_entry) end,
+                    order = 20
                 }
             }
         }
@@ -165,27 +214,38 @@ local function QuickLink_GenConfig()
     
     return options
 end
+
+
+local function UpdateOptionsFrame()
+    LibStub("AceConfigRegistry-3.0"):NotifyChange("QuickLink")
+end
 ------------------------------------------------------------------------
+function ConfigChange()
+    QuickLink_UNIT_POPUP = QuickLink:GetModule("QuickLink_UNIT_POPUP")
+    if QuickLink_UNIT_POPUP and QuickLink_UNIT_POPUP:IsEnabled() then
+        QuickLink_UNIT_POPUP:updateContextMenu()
+    end
+    UpdateOptionsFrame()
+end
 
 function QuickLink:OnInitialize()
     if not QuickLinkPages then
         QuickLinkPages = QuickLink_defaultPages
         QuickLink:Print("Loaded default pages")
     end
-    AceConfig:RegisterOptionsTable("QuickLink", QuickLink_GenConfig())
+    
+    AceConfig:RegisterOptionsTable("QuickLink", GenConfig())
     QuickLink.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("QuickLink", "QuickLink")
     
     QuickLink_variablesLoaded = true;
     QuickLink:EnableModule("QuickLink_UNIT_POPUP")
     QuickLink:EnableModule("QuickLink_LFG")
     QuickLink:EnableModule("QuickLink_BNET")
-    QuickLink_ConfigChange()
-end
-
-function QuickLink_ConfigChange()
-    QuickLink_UNIT_POPUP = QuickLink:GetModule("QuickLink_UNIT_POPUP")
-    if QuickLink_UNIT_POPUP and QuickLink_UNIT_POPUP:IsEnabled() then
-        QuickLink_UNIT_POPUP:updateContextMenu()
+    ConfigChange()
+    
+    SLASH_QUICKLINK1 = "/quicklink"
+    SlashCmdList["QUICKLINK"] = function(msg)
+        InterfaceOptionsFrame_OpenToCategory("QuickLink")
     end
 end
 
@@ -194,6 +254,7 @@ function hideDialog()
     linkEditBox:ClearFocus()
     QuickLinkFrame:Hide()
 end
+
 
 ------------------------------------------------------------------------
 -- Frame Event handling
