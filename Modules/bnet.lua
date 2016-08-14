@@ -14,7 +14,7 @@ function QuickLink_BNET:FriendsFrame_ShowBNDropdown(name, connected, lineID, cha
 	end
 	if client == BNET_CLIENT_WOW then
 		if index == nil then
-			table.insert(UnitPopupMenus["BN_FRIEND"], #(UnitPopupMenus["BN_FRIEND"])-1, "QUICKLINK");
+			table.insert(UnitPopupMenus["BN_FRIEND"], #(UnitPopupMenus["BN_FRIEND"]), "QUICKLINK");
 		end
 	else
 		if index ~= nil then

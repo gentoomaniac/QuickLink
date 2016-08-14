@@ -5,37 +5,40 @@ local L = LibStub("AceLocale-3.0"):GetLocale("QuickLink", true)
 ------------------------------------------------------------------------
 --- LFG context Menu hooking
 ------------------------------------------------------------------------
-function getLFGQuickLinkMenu(resultID)
-    local entry = {
-        text = L["ADDONNAME"],
-        hasArrow = true,
-        notCheckable = true,
-        menuList = {},
-    }
+function getLFGQuickLinkMenu()
+    local menu = {}
 	for i, page in pairs(QuickLinkPages) do
-       -- if table:get(QuickLinkPages[i], "enabled", true) then
-            table.insert(entry.menuList, {
+        if table:get(page, "enabled", true) then
+            table.insert(menu, {
                 text = page.name,
                 func = function(_, name) QuickLink:ShowUrlFrame(page.name, page.url, name); end,
                 notCheckable = true,
                 arg1 = nil,
                 disabled = nil,
             });
-     --   end
+        end
 	end
 	
-	return entry;
+	return menu;
 end
 
 function updateMenu(menu, qlMenu)
-	for i=1, #menu do
-		if menu[i].text == L["ADDONNAME"] then
-			menu[i] = qlMenu;
+    local updated = false
+    
+	for key, menuEntry in pairs(menu) do
+		if menuEntry.text == L["ADDONNAME"] then
+			menuEntry.menuList = qlMenu;
 			updated = true;
 		end
 	end
 	if not updated then
-		table.insert(menu, #menu-1, qlMenu);
+        local entry = {
+            text = L["ADDONNAME"],
+            hasArrow = true,
+            notCheckable = true,
+            menuList = qlMenu,
+        }
+		table.insert(menu, #menu, entry);
 	end
 	
 	return menu
@@ -44,14 +47,13 @@ end
 function QuickLink_LFG:LFGListUtil_GetSearchEntryMenu(resultID)
 	local id, activityID, name, comment, voiceChat, iLvl, honorLevel, age, numBNetFriends, numCharFriends, numGuildMates, isDelisted, leaderName, numMembers = C_LFGList.GetSearchResultInfo(resultID);
     local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID);
-
+    
 	local menu = self.hooks["LFGListUtil_GetSearchEntryMenu"](resultID);
-	local updated = false;
-	
-	local searchMenu = getLFGQuickLinkMenu(resultID);
-	for i=1,#searchMenu.menuList do
-		searchMenu.menuList[i].arg1 = leaderName;
-		searchMenu.menuList[i].disabled = not leaderName;
+    	
+	local searchMenu = getLFGQuickLinkMenu();
+	for k, e in pairs(searchMenu) do
+		e.arg1 = leaderName;
+		e.disabled = not leaderName;
 	end
 
     return updateMenu(menu, searchMenu);
@@ -62,12 +64,11 @@ function QuickLink_LFG:LFGListUtil_GetApplicantMemberMenu(applicantID, memberIdx
     local id, status, pendingStatus, numMembers, isNew, comment = C_LFGList.GetApplicantInfo(applicantID);
 	
 	local menu = self.hooks["LFGListUtil_GetApplicantMemberMenu"](applicantID, memberIdx);
-	local updated = false;
 	
-	local applicantMenu = getLFGQuickLinkMenu(resultID);
-	for i=1,#applicantMenu.menuList do
-		applicantMenu.menuList[i].arg1 = name;
-		applicantMenu.menuList[i].disabled = not name or (status ~= "applied" and status ~= "invited");
+	local applicantMenu = getLFGQuickLinkMenu();
+	for k, e in pairs(applicantMenu) do
+		e.arg1 = name;
+		e.disabled = not name or (status ~= "applied" and status ~= "invited");
 	end
 	
     return updateMenu(menu, applicantMenu);

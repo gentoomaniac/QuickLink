@@ -17,15 +17,15 @@ function QuickLink_UNIT_POPUP:updateContextMenu()
 end
 
 function addContextMenu()
-	table.insert(UnitPopupMenus["SELF"], #(UnitPopupMenus["SELF"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["PARTY"], #(UnitPopupMenus["PARTY"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["PLAYER"], #(UnitPopupMenus["PLAYER"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["RAID_PLAYER"], #(UnitPopupMenus["RAID_PLAYER"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["GUILD"], #(UnitPopupMenus["GUILD"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["GUILD_OFFLINE"], #(UnitPopupMenus["GUILD_OFFLINE"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["FRIEND"], #(UnitPopupMenus["FRIEND"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["FRIEND_OFFLINE"], #(UnitPopupMenus["FRIEND_OFFLINE"])-1, "QUICKLINK");
-	table.insert(UnitPopupMenus["CHAT_ROSTER"], #(UnitPopupMenus["CHAT_ROSTER"])-1, "QUICKLINK");
+	table.insert(UnitPopupMenus["SELF"], #(UnitPopupMenus["SELF"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["PARTY"], #(UnitPopupMenus["PARTY"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["PLAYER"], #(UnitPopupMenus["PLAYER"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["RAID_PLAYER"], #(UnitPopupMenus["RAID_PLAYER"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["GUILD"], #(UnitPopupMenus["GUILD"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["GUILD_OFFLINE"], #(UnitPopupMenus["GUILD_OFFLINE"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["FRIEND"], #(UnitPopupMenus["FRIEND"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["FRIEND_OFFLINE"], #(UnitPopupMenus["FRIEND_OFFLINE"]), "QUICKLINK");
+	table.insert(UnitPopupMenus["CHAT_ROSTER"], #(UnitPopupMenus["CHAT_ROSTER"]), "QUICKLINK");
 end
 
 function QuickLink_UNIT_POPUP:UnitPopup_OnClick(self)
