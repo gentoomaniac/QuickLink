@@ -13,7 +13,7 @@ function getLFGQuickLinkMenu(resultID)
         menuList = {},
     }
 	for i=1,#QuickLinkPages do
-        if table:get(QuickLinkPages[i], "enabled", true) then
+       -- if table:get(QuickLinkPages[i], "enabled", true) then
             table.insert(entry.menuList, {
                 text = QuickLinkPages[i].name,
                 func = function(_, name) QuickLink:ShowUrlFrame(QuickLinkPages[i].name, QuickLinkPages[i].url, name); end,
@@ -21,7 +21,7 @@ function getLFGQuickLinkMenu(resultID)
                 arg1 = nil,
                 disabled = nil,
             });
-        end
+     --   end
 	end
 	
 	return entry;
