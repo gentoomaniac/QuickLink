@@ -8,8 +8,6 @@ local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 local LRI = LibStub:GetLibrary("LibRealmInfo");
 
 -- Globals
--- so we know when our configuration is loaded
-QuickLink_variablesLoaded = false;
 -- details used by myAddOns
 QuickLink_details = {
     name = "QuickLink",
@@ -19,7 +17,7 @@ QuickLink_details = {
 -- default config settings
 local QuickLink_defaultPages = {
     { name = "Armory", url = "http://{REGION}.battle.net/wow/{LANGUAGE}/character/{REALM}/{NAME}/advanced", enabled = true },
-    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/player/{REGION}/{REALM}/{NAME}" },
+    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/player/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}", enabled = true },
 }
@@ -225,29 +223,22 @@ function GenConfig()
     return options
 end
 
-
-local function UpdateOptionsFrame()
-    LibStub("AceConfigRegistry-3.0"):NotifyChange("QuickLink")
-end
 ------------------------------------------------------------------------
 function ConfigChange()
     QuickLink_UNIT_POPUP = QuickLink:GetModule("QuickLink_UNIT_POPUP")
     if QuickLink_UNIT_POPUP and QuickLink_UNIT_POPUP:IsEnabled() then
         QuickLink_UNIT_POPUP:updateContextMenu()
     end
-    UpdateOptionsFrame()
 end
 
 function QuickLink:OnInitialize()
     if not QuickLinkPages then
         QuickLinkPages = QuickLink_defaultPages
-        QuickLink:Print("Loaded default pages")
     end
     
     AceConfig:RegisterOptionsTable("QuickLink", GenConfig)
     QuickLink.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("QuickLink", "QuickLink")
     
-    QuickLink_variablesLoaded = true;
     QuickLink:EnableModule("QuickLink_UNIT_POPUP")
     QuickLink:EnableModule("QuickLink_LFG")
     QuickLink:EnableModule("QuickLink_BNET")
@@ -256,10 +247,6 @@ function QuickLink:OnInitialize()
     SLASH_QUICKLINK1 = "/quicklink"
     SlashCmdList["QUICKLINK"] = function(msg)
         InterfaceOptionsFrame_OpenToCategory("QuickLink")
-    end
-    
-    for k, v in pairs(self) do
-        print(k, v)
     end
 end
 
