@@ -19,21 +19,29 @@ QuickLink_details = {
 -- default config settings
 local QuickLink_defaultPages = {
     { name = "Armory", url = "http://{REGION}.battle.net/wow/{LANGUAGE}/character/{REALM}/{NAME}/advanced", enabled = true },
-    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/player/{REGION}/{REALM}/{NAME}", enabled = true },
+    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/player/{REGION}/{REALM}/{NAME}" },
     { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}", enabled = true },
 }
 
 StaticPopupDialogs["QUICKLINK_DELETE"] = {
-    text = "delete?" ,
-    button1 = "Yes",
-    button2 = "No",
+    text = "" ,
+    button1 = L['YES'],
+    button2 = L['NO'],
     OnAccept = function() end,
     timeout = 0,
     whileDead = true,
     hideOnEscape = true,
     preferredIndex = 3,  -- avoid some UI taint, see http://www.wowace.com/announcements/how-to-avoid-some-ui-taint/
 }
+
+function table:get(t, key, default)
+    if t[key] ~= nil then
+        return t[key]
+    else
+        return default
+    end
+end
 
 local function urlEscape(url)
     return string.gsub(url, "([^A-Za-z0-9_:/?&=.-])",
@@ -91,14 +99,14 @@ function QuickLink:ShowUrlFrame(pagename, pagetemplate, name, server)
     end
 end
 
-local function GenConfig()
+function GenConfig()
     local options = {
-        name = "QuickLink", handler = QuickLink, type = "group",
+        name = L["ADDONNAME"], handler = QuickLink, type = "group",
         args = {
         	desc = {
 				order = 1,
 				type = "description",
-				name = "Some description here!",
+				name = L['OPTION_DESCRIPTION'],
 			},
         }
     }
@@ -112,44 +120,44 @@ local function GenConfig()
                 page_name = {
                     order = 1,
                     type = "input",
-                    name = "Name",
-                    desc = "Name of the page",
+                    name = L['OPTION_LABEL_NAME'],
+                    desc = L['OPTION_HELP_NAME'],
                     set = function(info, val)
                         QuickLinkPages[i].name = val
                         ConfigChange()
                     end,
-                    get = function() return QuickLinkPages[i].name end,
+                    get = function() return table:get(QuickLinkPages[i], "name", "") end,
                 },
                 page_url = {
                     order = 2,
                     type = "input",
-                    name = "URL",
-                    desc = "URL pattern for the page entry",
+                    name = L['OPTION_LABEL_URL'],
+                    desc = L['OPTION_HELP_URL'],
                     set = function(info, val)
                         QuickLinkPages[i].url = val
                         ConfigChange()
                     end,
-                    get = function() return QuickLinkPages[i].url end,
+                    get = function() return table:get(QuickLinkPages[i], "url", "") end,
                     width = "full",
                     multiline = 2
                 },
                 isEnabled = {
                     order = 10,
                     type = "toggle",
-                    name = "enabled",
-                    desc = "Enables the given link",
+                    name = L['OPTION_LABEL_ENABLED'],
+                    desc = L['OPTION_HELP_ENABLED'],
                     set = function(info, val)
                         QuickLinkPages[i].enabled = val
                         ConfigChange()
                     end,
-                    get = function() return QuickLinkPages[i].enabled end
+                    get = function() return table:get(QuickLinkPages[i], "enabled", false) end
                 },
                 delete = {
                     type = "execute",
-                    name = "delete",
-                    desc = "delete the link entirely",
+                    name = L['OPTION_BUTTON_DELETE'],
+                    desc = L['OPTION_HELP_DELETE'],
                     func = function()
-                        StaticPopupDialogs["QUICKLINK_DELETE"].text = "Do you really want to delete the link to " .. QuickLinkPages[i].name .. "?"
+                        StaticPopupDialogs["QUICKLINK_DELETE"].text = L['POPUP_DELETECONFIRMATION_QUESTION'](QuickLinkPages[i].name)
                         StaticPopupDialogs["QUICKLINK_DELETE"].OnAccept = function()
                             QuickLinkPages[i] = nil
                             ConfigChange()
@@ -164,16 +172,16 @@ local function GenConfig()
     end
     
     -- add entry for a new site
-    local new_entry = {name = "New Page", url = "", enabled = false}
+    local new_entry = {name = L['OPTION_DEFAULT_NAME'], url = L['OPTION_DEFAULT_URL'], enabled = false}
     options.args["page_new"] = {
             type = "group",
-            name = "+++ new link",
+            name = L['OPTION_LABEL_NEW'],
             args = {
                 page_name = {
                     order = 1,
                     type = "input",
-                    name = "Name",
-                    desc = "Name of the page",
+                    name = L['OPTION_LABEL_NAME'],
+                    desc = L['OPTION_HELP_NAME'],
                     set = function(info, val)
                         new_entry.name = val
                     end,
@@ -182,8 +190,8 @@ local function GenConfig()
                 page_url = {
                     order = 2,
                     type = "input",
-                    name = "URL",
-                    desc = "URL pattern for the page entry",
+                    name = L['OPTION_LABEL_URL'],
+                    desc = L['OPTION_HELP_URL'],
                     set = function(info, val)
                         new_entry.url = val
                     end,
@@ -194,8 +202,8 @@ local function GenConfig()
                 isEnabled = {
                     order = 10,
                     type = "toggle",
-                    name = "enabled",
-                    desc = "Enables the given link",
+                    name = L['OPTION_LABEL_ENABLED'],
+                    desc = L['OPTION_HELP_ENABLED'],
                     set = function(info, val)
                         new_entry.enabled = val
                     end,
@@ -203,9 +211,11 @@ local function GenConfig()
                 },
                 add = {
                     type = "execute",
-                    name = "add link",
-                    desc = "Add the link to QuickLink",
-                    func = function() table.insert(QuickLinkPages, new_entry) end,
+                    name = L['OPTION_BUTTON_ADD'],
+                    desc = L['OPTION_HELP_ADD'],
+                    func = function()
+                        table.insert(QuickLinkPages, new_entry)
+                    end,
                     order = 20
                 }
             }
@@ -234,7 +244,7 @@ function QuickLink:OnInitialize()
         QuickLink:Print("Loaded default pages")
     end
     
-    AceConfig:RegisterOptionsTable("QuickLink", GenConfig())
+    AceConfig:RegisterOptionsTable("QuickLink", GenConfig)
     QuickLink.optionsFrame = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("QuickLink", "QuickLink")
     
     QuickLink_variablesLoaded = true;
@@ -246,6 +256,10 @@ function QuickLink:OnInitialize()
     SLASH_QUICKLINK1 = "/quicklink"
     SlashCmdList["QUICKLINK"] = function(msg)
         InterfaceOptionsFrame_OpenToCategory("QuickLink")
+    end
+    
+    for k, v in pairs(self) do
+        print(k, v)
     end
 end
 

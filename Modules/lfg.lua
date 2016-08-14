@@ -7,13 +7,13 @@ local L = LibStub("AceLocale-3.0"):GetLocale("QuickLink", true)
 ------------------------------------------------------------------------
 function getLFGQuickLinkMenu(resultID)
     local entry = {
-        text = L["QUICKLINK"], -- TODO: locales
+        text = L["ADDONNAME"],
         hasArrow = true,
         notCheckable = true,
         menuList = {},
     }
 	for i=1,#QuickLinkPages do
-        if QuickLinkPages[i].enabled then
+        if table:get(QuickLinkPages[i], "enabled", true) then
             table.insert(entry.menuList, {
                 text = QuickLinkPages[i].name,
                 func = function(_, name) QuickLink:ShowUrlFrame(QuickLinkPages[i].name, QuickLinkPages[i].url, name); end,
@@ -29,7 +29,7 @@ end
 
 function updateMenu(menu, qlMenu)
 	for i=1, #menu do
-		if menu[i].text == L["QUICKLINK"] then -- TODO: locales
+		if menu[i].text == L["ADDONNAME"] then
 			menu[i] = qlMenu;
 			updated = true;
 		end
@@ -61,7 +61,7 @@ function QuickLink_LFG:LFGListUtil_GetApplicantMemberMenu(applicantID, memberIdx
     local name, class, localizedClass, level, itemLevel, tank, healer, damage, assignedRole = C_LFGList.GetApplicantMemberInfo(applicantID, memberIdx);
     local id, status, pendingStatus, numMembers, isNew, comment = C_LFGList.GetApplicantInfo(applicantID);
 	
-	local menu = self.hooks["LFGListUtil_GetApplicantMemberMenu"](applicantID, memberIdx);local menu = self.hooks["LFGListUtil_GetApplicantMemberMenu"](applicantID, memberIdx);
+	local menu = self.hooks["LFGListUtil_GetApplicantMemberMenu"](applicantID, memberIdx);
 	local updated = false;
 	
 	local applicantMenu = getLFGQuickLinkMenu(resultID);
@@ -72,6 +72,7 @@ function QuickLink_LFG:LFGListUtil_GetApplicantMemberMenu(applicantID, memberIdx
 	
     return updateMenu(menu, applicantMenu);
 end
+
 function QuickLink_LFG:OnEnable()
 	QuickLink_LFG:RawHook("LFGListUtil_GetSearchEntryMenu", true);
 	QuickLink_LFG:RawHook("LFGListUtil_GetApplicantMemberMenu", true);
