@@ -5,10 +5,11 @@
 ## Version: 7.0.3-1.0.0
 ## SavedVariables: QuickLinkPages
 
+embeds.xml
 libs\LibRealmInfo\LibRealmInfo.lua
 
-embeds.xml
-localization.lua
+locales\locales.xml
+
 QuickLinkFrame.xml
 
 Modules\bnet.lua
