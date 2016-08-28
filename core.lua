@@ -2,8 +2,6 @@ QuickLink = LibStub("AceAddon-3.0"):NewAddon("QuickLink", "AceConsole-3.0", "Ace
 
 local L = LibStub("AceLocale-3.0"):GetLocale("QuickLink", true)
 local AceConfig = LibStub("AceConfig-3.0")
-local AceConfigDialog = LibStub("AceConfigDialog-3.0")
-local AceConfigRegistry = LibStub("AceConfigRegistry-3.0")
 
 local LRI = LibStub:GetLibrary("LibRealmInfo");
 

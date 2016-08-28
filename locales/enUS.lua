@@ -1,6 +1,4 @@
-local AL3 = LibStub("AceLocale-3.0")
- 
-local L = AL3:NewLocale("QuickLink", "enUS", true, debug)
+local L = LibStub("AceLocale-3.0"):NewLocale("QuickLink", "enUS", true, debug)
 if L then
     L["ADDONNAME"] = "QuickLink"
     L["REGIONERROR"] = "Couldn't find region!"
