@@ -15,9 +15,13 @@ QuickLink_details = {
 -- default config settings
 local QuickLink_defaultPages = {
     { name = "Armory", url = "http://{REGION}.battle.net/wow/{LANGUAGE}/character/{REALM}/{NAME}/advanced", enabled = true },
-    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/player/{REGION}/{REALM}/{NAME}", enabled = true },
+    { name = "WowTrack", url = "https://wowtrack.org/characters/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}", enabled = true },
+	{ name = "WarcraftParser", url = "https://www.warcraftparser.com/character/{REGION}/{REALM}/{NAME}/", enabled = true},
+	{ name = "Add Char Guildox", url = "http://guildox.com/add/toon?realm=&toon={NAME}", enabled = true},
+	{ name = "Add char Wow Progress", url = "https://www.wowprogress.com/u_search?name={NAME}&realm={REALM}&area={REGION}&obj_type=char", enabled = true},
+
 }
 
 StaticPopupDialogs["QUICKLINK_DELETE"] = {
