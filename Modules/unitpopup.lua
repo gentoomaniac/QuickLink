@@ -23,6 +23,7 @@ function addContextMenu()
 	table.insert(UnitPopupMenus["RAID_PLAYER"], #(UnitPopupMenus["RAID_PLAYER"]), "QUICKLINK");
 	table.insert(UnitPopupMenus["GUILD"], #(UnitPopupMenus["GUILD"]), "QUICKLINK");
 	table.insert(UnitPopupMenus["GUILD_OFFLINE"], #(UnitPopupMenus["GUILD_OFFLINE"]), "QUICKLINK");
+  table.insert(UnitPopupMenus["COMMUNITIES_GUILD_MEMBER"], #(UnitPopupMenus["COMMUNITIES_GUILD_MEMBER"]), "QUICKLINK");
 	table.insert(UnitPopupMenus["FRIEND"], #(UnitPopupMenus["FRIEND"]), "QUICKLINK");
 	table.insert(UnitPopupMenus["FRIEND_OFFLINE"], #(UnitPopupMenus["FRIEND_OFFLINE"]), "QUICKLINK");
 	table.insert(UnitPopupMenus["CHAT_ROSTER"], #(UnitPopupMenus["CHAT_ROSTER"]), "QUICKLINK");
