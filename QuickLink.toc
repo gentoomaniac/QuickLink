@@ -2,7 +2,7 @@
 ## Title: QuickLink
 ## Notes: Adds Quicklinks for Armory and other WoW related sites to player popups and LFG and Friendlist
 ## Author: gentoomaniac
-## Version: 8.0.1-1.0.0
+## Version: 8.0.1-1.0.1
 ## SavedVariables: QuickLinkPages
 
 embeds.xml

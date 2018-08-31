@@ -6,11 +6,11 @@ local L = LibStub("AceLocale-3.0"):GetLocale("QuickLink", true)
 -- Target/Player Frame context menu
 ------------------------------------------------------------------------
 function QuickLink_UNIT_POPUP:updateContextMenu()
-	UnitPopupButtons["QUICKLINK"] = {text = L["ADDONNAME"], dist = 0, nested = 1 };
+	UnitPopupButtons["QUICKLINK"] = {text = L["ADDONNAME"], nested = 1 };
 	UnitPopupMenus["QUICKLINK"] = {}
 	for i, page in pairs(QuickLinkPages) do
         if table:get(page, "enabled", true) then
-            UnitPopupButtons["QUICKLINK_PAGE"..i] = {text = page.name, dist = 0};
+            UnitPopupButtons["QUICKLINK_PAGE"..i] = {text = page.name};
             table.insert(UnitPopupMenus["QUICKLINK"], "QUICKLINK_PAGE"..i);
         end
 	end
