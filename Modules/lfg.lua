@@ -45,15 +45,15 @@ function updateMenu(menu, qlMenu)
 end
 
 function QuickLink_LFG:LFGListUtil_GetSearchEntryMenu(resultID)
-	local id, activityID, name, comment, voiceChat, iLvl, honorLevel, age, numBNetFriends, numCharFriends, numGuildMates, isDelisted, leaderName, numMembers = C_LFGList.GetSearchResultInfo(resultID);
-    local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID);
+	local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID);
+	local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID);
     
 	local menu = self.hooks["LFGListUtil_GetSearchEntryMenu"](resultID);
-    	
+    
 	local searchMenu = getLFGQuickLinkMenu();
 	for k, e in pairs(searchMenu) do
-		e.arg1 = leaderName;
-		e.disabled = not leaderName;
+		e.arg1 = searchResultInfo.leaderName;
+		e.disabled = not searchResultInfo.leaderName;
 	end
 
     return updateMenu(menu, searchMenu);
