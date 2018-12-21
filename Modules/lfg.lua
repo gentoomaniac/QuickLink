@@ -45,15 +45,15 @@ function updateMenu(menu, qlMenu)
 end
 
 function QuickLink_LFG:LFGListUtil_GetSearchEntryMenu(resultID)
-	local id, activityID, name, comment, voiceChat, iLvl, honorLevel, age, numBNetFriends, numCharFriends, numGuildMates, isDelisted, leaderName, numMembers = C_LFGList.GetSearchResultInfo(resultID);
-    local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID);
+	local searchResultInfo = C_LFGList.GetSearchResultInfo(resultID);
+	local _, appStatus, pendingStatus, appDuration = C_LFGList.GetApplicationInfo(resultID);
     
 	local menu = self.hooks["LFGListUtil_GetSearchEntryMenu"](resultID);
-    	
+    
 	local searchMenu = getLFGQuickLinkMenu();
 	for k, e in pairs(searchMenu) do
-		e.arg1 = leaderName;
-		e.disabled = not leaderName;
+		e.arg1 = searchResultInfo.leaderName;
+		e.disabled = not searchResultInfo.leaderName;
 	end
 
     return updateMenu(menu, searchMenu);
@@ -61,14 +61,14 @@ end
  
 function QuickLink_LFG:LFGListUtil_GetApplicantMemberMenu(applicantID, memberIdx)
     local name, class, localizedClass, level, itemLevel, tank, healer, damage, assignedRole = C_LFGList.GetApplicantMemberInfo(applicantID, memberIdx);
-    local id, status, pendingStatus, numMembers, isNew, comment = C_LFGList.GetApplicantInfo(applicantID);
+    local getApplicantInfo = C_LFGList.GetApplicantInfo(applicantID);
 	
 	local menu = self.hooks["LFGListUtil_GetApplicantMemberMenu"](applicantID, memberIdx);
 	
 	local applicantMenu = getLFGQuickLinkMenu();
 	for k, e in pairs(applicantMenu) do
 		e.arg1 = name;
-		e.disabled = not name or (status ~= "applied" and status ~= "invited");
+		e.disabled = not name or (getApplicantInfo.applicationStatus ~= "applied" and getApplicantInfo.applicationStatus ~= "invited");
 	end
 	
     return updateMenu(menu, applicantMenu);
