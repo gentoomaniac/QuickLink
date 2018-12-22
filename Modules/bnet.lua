@@ -5,13 +5,14 @@ local L = LibStub("AceLocale-3.0"):GetLocale("QuickLink", true)
 -- There must be a better way!
 function QuickLink_BNET:FriendsFrame_ShowBNDropdown(name, connected, lineID, chatType, chatFrame, friendsList, bnetIDAccount)
 	local index = nil
-	
 	local _, _, _, _, _, _, client, _, _, _, _, _, _, _, _, _, _, _ = BNGetFriendInfoByID(bnetIDAccount)
+
 	for i, value in pairs(UnitPopupMenus["BN_FRIEND"]) do
 		if value == "QUICKLINK" then
 			index = i
 		end
 	end
+
 	if client == BNET_CLIENT_WOW then
 		if index == nil then
 			table.insert(UnitPopupMenus["BN_FRIEND"], #(UnitPopupMenus["BN_FRIEND"]), "QUICKLINK");
@@ -21,6 +22,7 @@ function QuickLink_BNET:FriendsFrame_ShowBNDropdown(name, connected, lineID, cha
 			table.remove(UnitPopupMenus["BN_FRIEND"], index)
 		end
 	end
+
 	self.hooks["FriendsFrame_ShowBNDropdown"](name, connected, lineID, chatType, chatFrame, friendsList, bnetIDAccount);
 end
 

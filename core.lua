@@ -73,7 +73,6 @@ local function getUrl(urltemplate, name, server)
 end
 
 function QuickLink:ShowUrlFrame(pagename, pagetemplate, name, server)
-
   if not server then
     n = gsub(name, "%-[^|]+", "")
     s = gsub(name, "[^|]+%-", "")
@@ -213,7 +212,6 @@ function GenConfig()
       }
     }
   }
-
 
   return options
 end
