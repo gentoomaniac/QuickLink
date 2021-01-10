@@ -8,9 +8,9 @@ local LRI = LibStub:GetLibrary("LibRealmInfo");
 -- default config settings
 local QuickLink_defaultPages = {
     { name = "Armory", url = "http://worldofwarcraft.com/{LANGUAGE}/character/{REALM}/{NAME}", enabled = true },
-    { name = "Old Armory", url = "http://{REGION}.battle.net/wow/{LANGUAGE}/character/{REALM}/{NAME}/advanced", enabled = false },
     { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/gear/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}", enabled = true },
+    { name = "raider.io", url = "https://raider.io/characters/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}", enabled = true },
 }
 
@@ -73,6 +73,7 @@ local function getUrl(urltemplate, name, server)
 end
 
 function QuickLink:ShowUrlFrame(pagename, pagetemplate, name, server)
+
   if not server then
     n = gsub(name, "%-[^|]+", "")
     s = gsub(name, "[^|]+%-", "")
@@ -212,6 +213,7 @@ function GenConfig()
       }
     }
   }
+
 
   return options
 end
