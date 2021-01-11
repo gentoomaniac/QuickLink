@@ -48,6 +48,7 @@ local function getUrl(urltemplate, name, server)
   if not server or server == "" then server = GetRealmName() end
 
   local _,realm,_,_,_,_,region = LRI:GetRealmInfo(server)
+  region = string.lower(region)
 
   if not region or region == "" then
     QuickLink:Print(L['REGIONERROR'])
@@ -63,9 +64,9 @@ local function getUrl(urltemplate, name, server)
 
   url,_ = string.gsub(urltemplate, "{REGION}", region)
   
-  if L["LANGUAGE"] == "en" and region == "eu" then
+  if string.lower(L["LANGUAGE"]) == "en" and region == "eu" then
     region_language = "en-gb"
-  elseif L["LANGUAGE"] == "en" and region == "us" then
+  elseif string.lower(L["LANGUAGE"]) == "en" and region == "us" then
     region_language = "en-gb"
   else
     region_language = L["LANGUAGE"]
@@ -78,7 +79,7 @@ local function getUrl(urltemplate, name, server)
     url = urlEscape(url);
   end
 
-  return url;
+  return string.lower(url);
 end
 
 function QuickLink:ShowUrlFrame(pagename, pagetemplate, name, server)
