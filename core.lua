@@ -75,10 +75,10 @@ local function getUrl(urltemplate, name, server)
   url,_ = string.gsub(url, "{REALM}", realm)
   url,_ = string.gsub(url, "{NAME}", name)
   if url then
-    url = urlEscape(url);
+    url = urlEscape(string.lower(url));
   end
 
-  return string.lower(url);
+  return url;
 end
 
 function QuickLink:ShowUrlFrame(pagename, pagetemplate, name, server)
