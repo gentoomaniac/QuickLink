@@ -22,10 +22,11 @@ if L then
     L['OPTION_DEFAULT_NAME'] = "Site Name"
     L['OPTION_DEFAULT_URL'] = ""
     L['OPTION_DESCRIPTION'] = [[You can use the following placeholders in the url:
-{LANGUAGE}   - The language of the page, derived from your localization
-{NAME}       - The character name
-{REALM}      - The realm name the character is on
-{REGION}     - The region the character is in (EU / US / ...)
+{REGION_LANGUAGE} - The language with a regional postfix, only relevant for en-us, en-gb
+{LANGUAGE}        - The language of the page, derived from your localization
+{NAME}            - The character name
+{REALM}           - The realm name the character is on
+{REGION}          - The region the character is in (EU / US / ...)
 ]]
     
     L['POPUP_DELETECONFIRMATION_QUESTION'] = function(name)
