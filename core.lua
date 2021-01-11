@@ -7,7 +7,7 @@ local LRI = LibStub:GetLibrary("LibRealmInfo");
 
 -- default config settings
 local QuickLink_defaultPages = {
-    { name = "Armory", url = "http://worldofwarcraft.com/{LANGUAGE}/character/{REALM}/{NAME}", enabled = true },
+    { name = "Armory", url = "http://worldofwarcraft.com/{REGION_LANGUAGE}/character/{REALM}/{NAME}", enabled = true },
     { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/gear/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "raider.io", url = "https://raider.io/characters/{REGION}/{REALM}/{NAME}", enabled = true },
@@ -62,6 +62,15 @@ local function getUrl(urltemplate, name, server)
   realm = realm:gsub(" ","-");
 
   url,_ = string.gsub(urltemplate, "{REGION}", region)
+  
+  if L["LANGUAGE"] == "en" and region == "eu" then
+    region_language = "en-gb"
+  elseif L["LANGUAGE"] == "en" and region == "us" then
+    region_language = "en-gb"
+  else
+    region_language = L["LANGUAGE"]
+  end
+  url,_ = string.gsub(url, "{REGION_LANGUAGE}", region_language)
   url,_ = string.gsub(url, "{LANGUAGE}", L["LANGUAGE"])
   url,_ = string.gsub(url, "{REALM}", realm)
   url,_ = string.gsub(url, "{NAME}", name)
