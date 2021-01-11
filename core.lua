@@ -8,8 +8,7 @@ local LRI = LibStub:GetLibrary("LibRealmInfo");
 -- default config settings
 local QuickLink_defaultPages = {
     { name = "Armory", url = "http://worldofwarcraft.com/{REGION_LANGUAGE}/character/{REALM}/{NAME}", enabled = true },
-    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/wow/gear/{REGION}/{REALM}/{NAME}", enabled = true },
-    { name = "Guildox", url = "http://guildox.com/toon/{REGION}/{REALM}/{NAME}", enabled = true },
+    { name = "Ask Mr. Robot", url = "http://www.askmrrobot.com/optimizer#{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "raider.io", url = "https://raider.io/characters/{REGION}/{REALM}/{NAME}", enabled = true },
     { name = "WOW Progress", url = "http://www.wowprogress.com/character/{REGION}/{REALM}/{NAME}", enabled = true },
 }
